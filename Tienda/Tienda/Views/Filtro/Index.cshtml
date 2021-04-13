@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/DataTables/DataTables-1.10.23/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+    <div class="app-main">
+
+        <div class="app-main__inner">
+
+            <div class="col-md-12 col-lg-12">
+                <div class="mb-12 card">
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title">
+                            <i class="header-icon lnr-rocket icon-gradient bg-tempting-azure"> </i>
+                            <h2>Filtro Sublinea</h2>
+                        </div>
+                        <div class="btn-actions-pane-right">
+                            <div class="nav">
+                             
+                                <select id="subed" class="form-control" onchange="viewDataTable()">
+                                    <option value="0">Seleccione..</option>
+                                    @foreach (var lin in ViewBag.subline)
+                                    {
+                                        <option value="@lin.Id_sublinea">@lin.Sublinea</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+                    <table class="table table-striped table-bordered" id="dataTableParameters">
+                        <thead>
+                            <tr>
+
+                                <th scope="col">Sublinea</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Producto</th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+
+            <div class="col-md-12 col-lg-12">
+                <div class="mb-12 card">
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title">
+                            <i class="header-icon lnr-rocket icon-gradient bg-tempting-azure"> </i>
+                            <h2>Filtro linea</h2>
+                        </div>
+                        <div class="btn-actions-pane-right">
+                            <div class="nav">
+                               
+                                <select id="line" class="form-control" onchange="viewDataTable2()">
+                                    <option value="0">Seleccione..</option>
+                                    @foreach (var lin in ViewBag.line)
+                                    {
+                                <option value="@lin.Id_linea">@lin.Linea</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+                    <table class="table table-striped table-bordered" id="dataTableParameters2">
+                        <thead>
+                            <tr>
+
+                                <th scope="col">Linea</th>
+                                <th scope="col">Sublinea</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Producto</th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+
+            <script type="text/javascript" src="~/Scripts/jquery-3.4.1.min.js"></script>
+            <script type="text/javascript" src="~/Content/DataTables/datatables.min.js"></script>
+            <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+            <script type="text/javascript" src="~/Content/DataTables/DataTables-1.10.23/js/dataTables.bootstrap4.min.js"></script>
+            <script type="text/javascript">
+
+
+                function viewDataTable() {
+
+                    var id = $('#subed').val();
+                    return $.ajax({
+                        type: 'POST',
+                        url: '/Filtro/chargeParameters',
+                        data: { id: id },
+                        dataType: 'json',
+                        success: function (data) {
+
+                            var sd = data;
+                            cargaTabla(sd);
+
+                        }, error: function (xhr, status) {
+
+                            alert('Disculpe, existió un problema');
+
+                        }
+                        //async: false
+                    });
+                }
+
+
+                function cargaTabla(response) {
+                    var table = $('#dataTableParameters').DataTable({
+                        "destroy": true,
+                        "data": response,
+                        "columns": [
+                            { "data": "Sublinea", "autoWidth": true },
+                            { "data": "Categoria", "autoWidth": true },
+                            { "data": "Producto", "autoWidth": true },
+
+
+                        ]
+                    });
+
+
+
+                }
+
+
+
+
+                function viewDataTable2() {
+
+                    var id = $('#line').val();
+                    return $.ajax({
+                        type: 'POST',
+                        url: '/Filtro/chargeParameters2',
+                        data: { id: id },
+                        dataType: 'json',
+                        success: function (data) {
+
+                            var sd = data;
+                            cargaTabla(sd);
+
+                        }, error: function (xhr, status) {
+
+                            alert('Disculpe, existió un problema');
+
+                        }
+                        //async: false
+                    });
+                }
+
+
+                function cargaTabla(response) {
+                    var table = $('#dataTableParameters2').DataTable({
+                        "destroy": true,
+                        "data": response,
+                        "columns": [
+                            { "data": "Linea", "autoWidth": true },
+                            { "data": "Sublinea", "autoWidth": true },
+                            { "data": "Categoria", "autoWidth": true },
+                            { "data": "Producto", "autoWidth": true },
+
+
+                        ]
+                    });
+
+
+
+                }
+
+            </script>
+
